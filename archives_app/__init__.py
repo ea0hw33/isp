@@ -17,8 +17,12 @@ def handler(id=None):
 
         @response.call_on_close
         def on_close():
+
+            archive = Downloader(link=data['url'], id=len(list_of_archive) + 1)
             print('here')
-            Downloader(link=data['url'], id=len(list_of_archive) + 1)
+            print(len(list_of_archive))
+            del archive
+            print(len(list_of_archive))
 
         return response
 

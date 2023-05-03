@@ -7,3 +7,5 @@ class Archive:
     id : int
     progress : int
     status : str
+
+
