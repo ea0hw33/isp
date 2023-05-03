@@ -1,20 +1,33 @@
-import json
+from flask import Flask, Response, request
 
-from flask import Flask, request
+
+app = Flask(__name__)
+app.config.from_object('config')
 
 from archives_app.Downloader import Downloader, list_of_archive
 
-app = Flask(__name__)
-
 @app.route("/archive",methods=['POST'])
 @app.route("/archive/<id>", methods = ['GET','DELETE'])
-def handler():
+def handler(id=None):
     if request.method == 'POST':
-        data = json.loads(request.data)
-        download = Downloader(link = data['url'],id = len(list_of_archive)+1 )
 
-        return str(download.id)
+        id = len(list_of_archive) + 1
+        data = request.json
+        response = Response(str(id))
+
+        @response.call_on_close
+        def on_close():
+            print('here')
+            Downloader(link=data['url'], id=len(list_of_archive) + 1)
+
+        return response
+
     log: dict
     if request.method == 'GET':
-        return
+        return list_of_archive[int(id)-1].get_status()
+
+    if request.method == 'DELETE':
+        pass
+
+
 
