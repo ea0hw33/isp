@@ -34,15 +34,14 @@ class Downloader(Archive):
                     f.write(data)
                     dl += len(data)
                     self.progress = int(dl / (total_length / 100))
-        del self
+        self.status = 'unpacking'
+        self.progress = 0
 
     def get_status(self):
-        log: dict
-        if self.status == 'downloading':
-            log = {"status": self.status, "progress": self.progress}
 
+        log = {"status": self.status, "progress": self.progress}
         return json.dumps(log)
 
-    def __del__(self):
-        # print('2')
-        list_of_archive[self.id - 1] = Unpacking(self.id, file_path=self.file_path)
+    # def __del__(self):
+    #     # print('2')
+    #     list_of_archive[self.id - 1] = Unpacking(self.id, file_path=self.file_path)

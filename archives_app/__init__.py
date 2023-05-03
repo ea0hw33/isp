@@ -1,5 +1,7 @@
 from flask import Flask, Response, request
 
+from archives_app.DeleteFiles import DeleteFiles
+from archives_app.Unpacking import Unpacking
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -12,17 +14,18 @@ def handler(id=None):
     if request.method == 'POST':
 
         id = len(list_of_archive) + 1
+        print(id)
         data = request.json
         response = Response(str(id))
 
         @response.call_on_close
         def on_close():
 
+            print(id)
             archive = Downloader(link=data['url'], id=len(list_of_archive) + 1)
-            print('here')
-            print(len(list_of_archive))
-            del archive
-            print(len(list_of_archive))
+            print(id)
+            list_of_archive[id-1] = Unpacking(id, file_path=archive.file_path)
+            print(id)
 
         return response
 
@@ -31,7 +34,9 @@ def handler(id=None):
         return list_of_archive[int(id)-1].get_status()
 
     if request.method == 'DELETE':
-        pass
+        archive = list_of_archive[int(id)-1]
+        DeleteFiles.deleteDir(archive.file_path)
+        return 'ok'
 
 
 

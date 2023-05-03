@@ -1,7 +1,7 @@
 import json
-import os
 import tarfile
 
+from archives_app import DeleteFiles
 from archives_app.Archive import Archive
 
 
@@ -14,18 +14,18 @@ class Unpacking(Archive):
     def __init__(self,id: int,file_path: str):
         self.id = id
         self.file_path = file_path
-        self.file_name = os.path.splitext(self.file_path)[0]
         self.unpack()
 
     def unpack(self):
-        with tarfile.open(self.file_path) as f:
+        with tarfile.open(self.file_path, "r:gz") as f:
 
-            f.extractall(self.file_path+'\\'+ self.file_name, members = self.track_progress(f))
+            f.extractall(self.file_path[:-7], members = self.track_progress(f), numeric_owner=True)
             self.files = f.getnames()
-        print(self.files)
+        self.status = 'ok'
+        DeleteFiles.deleteFile(self.file_path)
 
     def track_progress(self, members):
-        total = len(members)
+        total = len(members.getmembers())
         count = 0
         for member in members:
             yield member
@@ -37,7 +37,8 @@ class Unpacking(Archive):
         if self.status == 'unpacking':
             log = {"status": self.status, "progress": self.progress}
         elif self.status == 'ok':
-            log = {"status":self.status}
+            log = {"status":self.status, "files":str(self.files)}
 
         return json.dumps(log)
+
 
