@@ -20,7 +20,6 @@ class Unpacking(Archive):
             f.extractall(self.file_path[:-7], members=self.track_progress(f), numeric_owner=True)
             self.files = f.getnames()
         self.status = 'ok'
-        DeleteFiles.deleteFile(self.file_path)
 
     def track_progress(self, members):
         total = len(members.getmembers())
@@ -30,11 +29,11 @@ class Unpacking(Archive):
             count += 1
             self.progress = int(count / (total / 100))
 
-    def get_status(self) -> str:
+    def get_status(self) -> dict:
         log: dict
         if self.status == 'unpacking':
             log = {"status": self.status, "progress": self.progress}
         elif self.status == 'ok':
             log = {"status": self.status, "files": self.files}
 
-        return json.dumps(log)
+        return log

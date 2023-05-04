@@ -1,23 +1,23 @@
 import json
 import requests
-from archives_app.Archive import Archive
+from archives_app.Archive import Archive, list_of_archives, dict_of_archive_names
 from archives_app import app
-
-list_of_archive = []
-
 
 class Downloader(Archive):
     progress = 0
     status = "downloading"
 
-    def __init__(self, link: str, id: int) -> None:
 
-        list_of_archive.append(self)
+    def __init__(self, link: str, id: int) -> None:
 
         self.id = id
         self.link = link
         self.file = self.link[self.link.rfind('/') + 1:]
         self.file_path = app.config['DATASAVE_PATH'] + self.file
+
+        list_of_archives.append(self)
+        dict_of_archive_names[self.file] = id
+
         self.download_archive()
 
     def download_archive(self) -> None:
@@ -41,7 +41,7 @@ class Downloader(Archive):
     def track_progress(self, total: int, dl: int) -> None:
         self.progress = int(dl / (total / 100))
 
-    def get_status(self) -> str:
+    def get_status(self) -> dict:
 
         log = {"status": self.status, "progress": self.progress}
-        return json.dumps(log)
+        return log
