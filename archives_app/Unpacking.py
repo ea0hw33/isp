@@ -1,7 +1,5 @@
-import json
 import tarfile
 
-from archives_app import DeleteFiles
 from archives_app.Archive import Archive
 
 

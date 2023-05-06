@@ -1,12 +1,12 @@
-import json
 import requests
+
 from archives_app.Archive import Archive, list_of_archives, dict_of_archive_names
 from archives_app import app
+
 
 class Downloader(Archive):
     progress = 0
     status = "downloading"
-
 
     def __init__(self, link: str, id: int) -> None:
 

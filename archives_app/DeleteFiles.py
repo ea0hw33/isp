@@ -1,4 +1,3 @@
-import json
 import os
 import stat
 from shutil import rmtree

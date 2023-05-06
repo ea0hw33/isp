@@ -1,11 +1,9 @@
-import json
-from typing import Tuple
-
 from flask import Flask, Response, request, jsonify
 
 from archives_app.Archive import dict_of_archive_names, list_of_archives
 from archives_app.DeleteFiles import DeleteFiles
 from archives_app.Unpacking import Unpacking
+from archives_app.User import User
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -18,12 +16,9 @@ from archives_app.Downloader import Downloader
 def handler(id=None) -> tuple[Response, int] | Response:
 
     if id is None:
-        print('here')
         file_name = request.json['url']
         file_name = file_name[file_name.rfind('/')+1:]
-        print(file_name)
         if file_name in dict_of_archive_names:
-            print('here')
             return jsonify(id=dict_of_archive_names[file_name]), 200
 
     if request.method == 'POST':
@@ -47,7 +42,7 @@ def handler(id=None) -> tuple[Response, int] | Response:
             status = list_of_archives[int(id) - 1].get_status()['status']
             if status == 'downloading':
                 raise PermissionError
-            if status == 'deleted':
+            elif status == 'deleted':
                 raise FileNotFoundError
 
             list_of_archives[int(id) - 1] = \
