@@ -1,12 +1,12 @@
 FROM --platform=$BUILDPLATFORM python:3.11-alpine AS builder
 
-WORKDIR /archives_app
+WORKDIR /app
 
-COPY requirements.txt /archives_app
+COPY requirements.txt /app
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install -r requirements.txt
 
-COPY . /archives_app
+COPY . /app
 
 ENTRYPOINT ["python3"]
 CMD ["run.py"]

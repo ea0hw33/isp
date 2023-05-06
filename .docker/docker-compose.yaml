@@ -1,7 +1,7 @@
 services:
   web:
     build:
-      context: archives_app
+      context: /
       target: dev-envs
     stop_signal: SIGINT
     ports:
