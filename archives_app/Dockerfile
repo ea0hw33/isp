@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM python:3.11-alpine AS builder
 
-WORKDIR /isp
+WORKDIR /archives_app
 
 COPY requirements.txt /archives_app
 RUN --mount=type=cache,target=/root/.cache/pip \
